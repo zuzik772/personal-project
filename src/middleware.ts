@@ -2,4 +2,4 @@
 export { default } from "next-auth/middleware";
 
 //Applies next-auth only to the matching routes
-// export const config = { matcher: ["/dashboard"] };
+export const config = { matcher: ["/dashboard"] };

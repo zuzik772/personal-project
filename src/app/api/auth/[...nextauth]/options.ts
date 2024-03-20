@@ -23,14 +23,13 @@ export const options: NextAuthOptions = {
         },
       },
       async authorize(credentials): Promise<User | null> {
-        const user = { id: "1", name: "Zuz", password: "pass123" };
+        const user = { id: "1", username: "zuz", password: "pass123" };
         if (
-          credentials?.username === user.name &&
+          credentials?.username === user.username &&
           credentials?.password === user.password
         ) {
           return user;
-        }
-        return null;
+        } else throw new Error("Invalid credentials");
       },
     }),
   ],

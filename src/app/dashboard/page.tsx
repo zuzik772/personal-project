@@ -19,8 +19,9 @@ const Dashboard = () => {
   return (
     <div className={styles.main}>
       <h1>Dashboard</h1>
-      <GoBackButton />
+
       <UserCard user={data?.user as UserProps} />
+      <GoBackButton />
     </div>
   );
 };
