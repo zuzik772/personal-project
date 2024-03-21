@@ -12,7 +12,7 @@ export const options: NextAuthOptions = {
       name: "Credentials",
       credentials: {
         email: {
-          label: "email",
+          label: "Email",
           type: "email",
           placeholder: "Enter your email",
         },

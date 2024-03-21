@@ -13,10 +13,10 @@ import {
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import Link from "next/link";
+import { useRouter } from "next/navigation";
 
 const FormSchema = z
   .object({
-    username: z.string().min(1, "Username is required").max(100),
     email: z.string().min(1, "Email is required").email("Invalid email"),
     password: z
       .string()
@@ -30,6 +30,7 @@ const FormSchema = z
   });
 
 const SignUpForm = () => {
+  const router = useRouter();
   const form = useForm<z.infer<typeof FormSchema>>({
     resolver: zodResolver(FormSchema),
     defaultValues: {
@@ -39,8 +40,21 @@ const SignUpForm = () => {
     },
   });
 
-  const onSubmit = (values: z.infer<typeof FormSchema>) => {
-    console.log(values);
+  const onSubmit = async (values: z.infer<typeof FormSchema>) => {
+    const response = await fetch("/api/users", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({
+        email: values.email,
+        password: values.password,
+      }),
+    });
+
+    if (response.ok) {
+      router.push("/api/auth/signin");
+    } else {
+      alert("Registration failed. Please try again.");
+    }
   };
 
   return (
@@ -107,7 +121,7 @@ const SignUpForm = () => {
         or
       </div>
       <p className="text-center text-sm text-gray-600 mt-2">
-        If you don&apos;t have an account, please&nbsp;
+        If you already have an account, please&nbsp;
         <Link className="text-blue-500 hover:underline" href="/api/auth/signin">
           Sign in
         </Link>
