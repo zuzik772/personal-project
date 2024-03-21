@@ -6,12 +6,7 @@ import prisma from "@/lib/prisma";
 import { compare } from "bcrypt";
 
 export const options: NextAuthOptions = {
-  adapter: PrismaAdapter(prisma),
-  secret: process.env.NEXTAUTH_SECRET,
   //default is jwt
-  session: {
-    strategy: "jwt",
-  },
   //provide custom pages if needed
   providers: [
     GithubProvider({
@@ -38,10 +33,10 @@ export const options: NextAuthOptions = {
         },
       },
       async authorize(credentials) {
-        if (!credentials?.email || !credentials.password)
+        if (!credentials || !credentials.email || !credentials.password)
           throw new Error("No credentials provided");
         const existingUser = await prisma.user.findUnique({
-          where: { email: credentials?.email },
+          where: { email: credentials.email },
         });
 
         if (!existingUser) {

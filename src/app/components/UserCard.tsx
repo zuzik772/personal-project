@@ -1,28 +1,22 @@
+"use client";
+import { useSession } from "next-auth/react";
+//I must use an AuthProvider for client components to useSession
 import Image from "next/image";
 
-export type UserProps = {
-  name: string;
-  username?: string;
-  email: string;
-  image: string;
-};
+const UserCard = () => {
+  const { data: session } = useSession();
 
-type Props = {
-  user: UserProps;
-};
-
-const UserCard = ({ user }: Props) => {
   return (
     <section>
-      {user?.image && (
+      {session?.user?.image && (
         <Image
-          src={user?.image}
-          alt={`${user?.name}'s profile pic`}
+          src={session?.user?.image}
+          alt={`${session?.user?.name}'s profile pic`}
           width="200"
           height="200"
         />
       )}
-      <p>Hello, {user?.name || user?.username}!</p>
+      <p>Hello, {session?.user?.name || session?.user?.username}!</p>
     </section>
   );
 };
