@@ -2,6 +2,7 @@ import Image from "next/image";
 
 export type UserProps = {
   name: string;
+  username?: string;
   email: string;
   image: string;
 };
@@ -11,6 +12,7 @@ type Props = {
 };
 
 const UserCard = ({ user }: Props) => {
+  console.log("user", user);
   return (
     <section>
       <Image
@@ -19,7 +21,7 @@ const UserCard = ({ user }: Props) => {
         width="200"
         height="200"
       />
-      <p>Hello, {user?.name}!</p>
+      <p>Hello, {user?.name || user?.username}!</p>
       <p>{user?.email}</p>
     </section>
   );

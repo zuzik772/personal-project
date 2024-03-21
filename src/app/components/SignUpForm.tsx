@@ -14,9 +14,11 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
+import { User } from "lucide-react";
 
 const FormSchema = z
   .object({
+    username: z.string().min(1, "Username is required"),
     email: z.string().min(1, "Email is required").email("Invalid email"),
     password: z
       .string()
@@ -34,6 +36,7 @@ const SignUpForm = () => {
   const form = useForm<z.infer<typeof FormSchema>>({
     resolver: zodResolver(FormSchema),
     defaultValues: {
+      username: "",
       email: "",
       password: "",
       confirmPassword: "",
@@ -45,6 +48,7 @@ const SignUpForm = () => {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({
+        username: values.username,
         email: values.email,
         password: values.password,
       }),
@@ -61,6 +65,23 @@ const SignUpForm = () => {
     <Form {...form}>
       <form onSubmit={form.handleSubmit(onSubmit)} className="w-full">
         <div className="space-y-2">
+          <FormField
+            control={form.control}
+            name="username"
+            render={({ field }) => (
+              <FormItem>
+                <FormLabel>Username</FormLabel>
+                <FormControl>
+                  <Input
+                    placeholder="Enter your username"
+                    type="text"
+                    {...field}
+                  />
+                </FormControl>
+                <FormMessage />
+              </FormItem>
+            )}
+          />
           <FormField
             control={form.control}
             name="email"

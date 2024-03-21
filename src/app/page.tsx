@@ -4,6 +4,7 @@ import Link from "next/link";
 
 export default async function Home() {
   const session = await getServerSession(options);
+  console.log("session", session);
   return (
     <div className="p-6 bg-gray-100 min-h-screen w-full">
       <h1 className="text-3xl mb-4 text-center">Hi from Zuzi</h1>

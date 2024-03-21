@@ -13,8 +13,6 @@ const Dashboard = () => {
     },
   });
 
-  console.log("data", data);
-
   return (
     <div>
       <h1>Dashboard</h1>
