@@ -90,7 +90,7 @@ const SignUpForm = () => {
                 <FormLabel>Email</FormLabel>
                 <FormControl>
                   <Input
-                    placeholder="Enter your email"
+                    placeholder="mail@example.com"
                     type="email"
                     {...field}
                   />
@@ -143,7 +143,7 @@ const SignUpForm = () => {
       </div>
       <p className="text-center text-sm text-gray-600 mt-2">
         If you already have an account, please&nbsp;
-        <Link className="text-blue-500 hover:underline" href="/api/auth/signin">
+        <Link className="text-blue-500 hover:underline" href="/signin">
           Sign in
         </Link>
       </p>

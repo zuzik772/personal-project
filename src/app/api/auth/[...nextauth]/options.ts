@@ -1,4 +1,4 @@
-import type { NextAuthOptions, User } from "next-auth";
+import type { NextAuthOptions } from "next-auth";
 import GithubProvider from "next-auth/providers/github";
 import CredentialsProvider from "next-auth/providers/credentials";
 import { PrismaAdapter } from "@next-auth/prisma-adapter";
@@ -7,11 +7,12 @@ import { compare } from "bcrypt";
 
 export const options: NextAuthOptions = {
   //default is jwt
-  //provide custom pages if needed
+  // adapter: PrismaAdapter(prisma),
+  pages: { signIn: "/signin" },
   providers: [
     GithubProvider({
-      clientId: process.env.GITHUB_ID as string,
-      clientSecret: process.env.GITHUB_SECRET as string,
+      clientId: process.env.GITHUB_CLIENT_ID as string,
+      clientSecret: process.env.GITHUB_CLIENT_SECRET as string,
     }),
     CredentialsProvider({
       name: "Credentials",

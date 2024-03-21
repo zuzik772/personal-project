@@ -13,19 +13,20 @@ export default async function Home() {
         <Link href="/dashboard" className="text-blue-500 hover:underline">
           Go to dashboard
         </Link>
-        <Link href="/api/auth/signin" className="text-blue-500 hover:underline">
+        <Link href="/signin" className="text-blue-500 hover:underline">
           Go to sign in
         </Link>
-        <Link href="/api/signup" className="text-blue-500 hover:underline">
+        <Link href="/signup" className="text-blue-500 hover:underline">
           Go to sign up
         </Link>
       </nav>
       {session && (
         <p className="mt-4 text-center text-green-500 font-bold">
           I can see you managed to sign in {session.user.username}
-          {session.user.username === "Zuzana" && (
-            <p> good luck with landing the awesome job with Shape Games!</p>
-          )}
+          {session.user.username === "Zuzana" ||
+            (session.user.name === "zuzik772" && (
+              <p> good luck with landing the awesome job with Shape Games!</p>
+            ))}
         </p>
       )}
     </div>
