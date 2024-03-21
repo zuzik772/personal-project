@@ -3,7 +3,7 @@
 import UserCard, { UserProps } from "../components/UserCard";
 import { useSession } from "next-auth/react";
 import { redirect } from "next/navigation";
-import GoBackButton from "../components/SignOutButton";
+import SignOutButton from "../components/SignOutButton";
 
 const Dashboard = () => {
   const { data } = useSession({
@@ -18,7 +18,7 @@ const Dashboard = () => {
       <h1>Dashboard</h1>
 
       <UserCard user={data?.user as UserProps} />
-      <GoBackButton />
+      <SignOutButton />
     </div>
   );
 };

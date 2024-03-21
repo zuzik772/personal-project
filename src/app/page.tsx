@@ -3,6 +3,7 @@ import { options } from "./api/auth/[...nextauth]/options";
 import Link from "next/link";
 
 export default async function Home() {
+  //getServerSession is faster than useSession
   const session = await getServerSession(options);
   console.log("session", session);
   return (
@@ -20,8 +21,11 @@ export default async function Home() {
         </Link>
       </nav>
       {session && (
-        <p className="mt-4 text-center text-green-500">
-          I can see you are logged in
+        <p className="mt-4 text-center text-green-500 font-bold">
+          I can see you managed to sign in {session.user.username}
+          {session.user.username === "Zuzana" && (
+            <p> good luck with landing the awesome job with Shape Games!</p>
+          )}
         </p>
       )}
     </div>

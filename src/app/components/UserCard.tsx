@@ -12,17 +12,17 @@ type Props = {
 };
 
 const UserCard = ({ user }: Props) => {
-  console.log("user", user);
   return (
     <section>
-      <Image
-        src={user?.image}
-        alt={`${user?.name}'s profile pic`}
-        width="200"
-        height="200"
-      />
+      {user?.image && (
+        <Image
+          src={user?.image}
+          alt={`${user?.name}'s profile pic`}
+          width="200"
+          height="200"
+        />
+      )}
       <p>Hello, {user?.name || user?.username}!</p>
-      <p>{user?.email}</p>
     </section>
   );
 };
