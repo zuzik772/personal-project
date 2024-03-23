@@ -16,9 +16,10 @@ import {
 } from "@/components/ui/form";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import GithubSignInButton from "../GithubSignInButton";
+import GithubSignInButton from "../buttons/GithubSignInButton";
 import { signIn } from "next-auth/react";
 import { useRouter } from "next/navigation";
+import { cn } from "@/lib/utils";
 
 const FormSchema = z.object({
   email: z.string().min(1, "Email is required").email("Invalid email"),
@@ -51,6 +52,9 @@ const SignInForm = () => {
         title: "Error",
         description: "Oops! Something went wrong",
         variant: "destructive",
+        className: cn(
+          "top-0 right-0 flex fixed md:max-w-[420px] md:top-4 md:right-4"
+        ),
       });
     } else {
       router.push("/dashboard");

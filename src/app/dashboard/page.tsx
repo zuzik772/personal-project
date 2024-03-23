@@ -1,13 +1,17 @@
-import SignOutButton from "../components/SignOutButton";
-import UserCard from "../components/UserCard";
+import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogHeader,
+  DialogTitle,
+  DialogTrigger,
+} from "@/components/ui/dialog";
 
 const Dashboard = () => {
   return (
-    <div>
-      <h1>Dashboard</h1>
-
-      <UserCard />
-      <SignOutButton />
+    <div className="flex">
+      Display All tasks
+      <div></div>
     </div>
   );
 };

@@ -1,9 +1,9 @@
 import { Button } from "@/components/ui/button";
 import { signIn } from "next-auth/react";
 import Image from "next/image";
-import githubLogo from "../../../public/github-mark-white.svg";
+import githubLogo from "../../../../public/github-mark-white.svg";
 import { useState } from "react";
-import LoadingSpinner from "./icons/LoadingSpinner";
+import LoadingSpinner from "../icons/LoadingSpinner";
 
 const GithubSignInButton = () => {
   const [isLoading, setIsLoading] = useState(false);

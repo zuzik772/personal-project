@@ -4,6 +4,7 @@ import "./globals.css";
 import ThemeProvider from "./theme-provider";
 import AuthProvider from "./context/AuthProvider";
 import { Toaster } from "@/components/ui/toaster";
+import NavBar from "./components/NavBar";
 const inter = Inter({ subsets: ["latin"] });
 
 export const metadata: Metadata = {
@@ -19,11 +20,14 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body className={inter.className}>
-        <main className="h-screen flex justify-center items-center">
-          <AuthProvider>
-            <ThemeProvider>{children}</ThemeProvider>
-          </AuthProvider>
-        </main>
+        <AuthProvider>
+          <ThemeProvider>
+            <main className="h-screen flex justify-center items-center">
+              {children}
+            </main>
+          </ThemeProvider>
+        </AuthProvider>
+
         <Toaster />
       </body>
     </html>
