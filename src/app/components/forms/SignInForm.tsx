@@ -19,28 +19,20 @@ import { Input } from "@/components/ui/input";
 import GithubSignInButton from "../buttons/GithubSignInButton";
 import { signIn } from "next-auth/react";
 import { useRouter } from "next/navigation";
-import { cn } from "@/lib/utils";
-
-const FormSchema = z.object({
-  email: z.string().min(1, "Email is required").email("Invalid email"),
-  password: z
-    .string()
-    .min(1, "Password is required")
-    .min(6, "Password must have at least 6 characters"),
-});
+import { SignInFormSchema } from "@/app/utils/validationSchemas";
+import { showErrorToast } from "@/app/utils/showErrorToast";
 
 const SignInForm = () => {
   const router = useRouter();
-  const { toast } = useToast();
-  const form = useForm<z.infer<typeof FormSchema>>({
-    resolver: zodResolver(FormSchema),
+  const form = useForm<z.infer<typeof SignInFormSchema>>({
+    resolver: zodResolver(SignInFormSchema),
     defaultValues: {
       email: "",
       password: "",
     },
   });
 
-  const onSubmit = async (values: z.infer<typeof FormSchema>) => {
+  const onSubmit = async (values: z.infer<typeof SignInFormSchema>) => {
     const signInData = await signIn("credentials", {
       email: values.email,
       password: values.password,
@@ -48,14 +40,7 @@ const SignInForm = () => {
     });
 
     if (signInData?.error) {
-      toast({
-        title: "Error",
-        description: "Oops! Something went wrong",
-        variant: "destructive",
-        className: cn(
-          "top-0 right-0 flex fixed md:max-w-[420px] md:top-4 md:right-4"
-        ),
-      });
+      showErrorToast();
     } else {
       router.push("/dashboard");
     }
@@ -108,7 +93,7 @@ const SignInForm = () => {
         or
       </div>
       <GithubSignInButton />
-      <p className="text-center text-sm text-gray-600 mt-2">
+      <p className="text-center text-sm mt-4">
         If you don&apos;t have an account, please&nbsp;
         <Link className="text-blue-500 hover:underline" href="/signup">
           Sign up

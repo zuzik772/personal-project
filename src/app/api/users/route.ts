@@ -1,18 +1,10 @@
 import prisma from "@/lib/prisma";
 import { NextResponse } from "next/server";
 import { hash } from "bcrypt";
-import { z } from "zod";
-
-const userSchema = z.object({
-  username: z.string().min(1, "Username is required"),
-  email: z.string().min(1, "Email is required").email("Invalid email"),
-  password: z
-    .string()
-    .min(1, "Password is required")
-    .min(6, "Password must have minimum 6 characters"),
-});
+import { userSchema } from "@/app/utils/validationSchemas";
 
 export async function POST(req: Request) {
+  //Using try catch + parse
   try {
     const body = await req.json();
     const { email, username, password } = userSchema.parse(body);

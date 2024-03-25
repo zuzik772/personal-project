@@ -1,5 +1,10 @@
+"use client";
+import Tasks from "@/app/components/tasks/Tasks";
+import { useGlobalContext } from "../../context/GlobalContextProvider";
+
 const NewTasks = () => {
-  return <div>NewTasks</div>;
+  const { newTasks } = useGlobalContext();
+  return <Tasks title="New tasks" tasks={newTasks} />;
 };
 
 export default NewTasks;

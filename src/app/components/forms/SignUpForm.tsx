@@ -14,27 +14,13 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
-import { User } from "lucide-react";
-
-const FormSchema = z
-  .object({
-    username: z.string().min(1, "Username is required"),
-    email: z.string().min(1, "Email is required").email("Invalid email"),
-    password: z
-      .string()
-      .min(1, "Password is required")
-      .min(6, "Password must have minimum 6 characters"),
-    confirmPassword: z.string().min(1, "Password confirmation is required"),
-  })
-  .refine((data) => data.password === data.confirmPassword, {
-    path: ["confirmPassword"],
-    message: "Password do not match",
-  });
+import { SignUpFormSchema } from "@/app/utils/validationSchemas";
+import { showErrorToast } from "@/app/utils/showErrorToast";
 
 const SignUpForm = () => {
   const router = useRouter();
-  const form = useForm<z.infer<typeof FormSchema>>({
-    resolver: zodResolver(FormSchema),
+  const form = useForm<z.infer<typeof SignUpFormSchema>>({
+    resolver: zodResolver(SignUpFormSchema),
     defaultValues: {
       username: "",
       email: "",
@@ -43,7 +29,7 @@ const SignUpForm = () => {
     },
   });
 
-  const onSubmit = async (values: z.infer<typeof FormSchema>) => {
+  const onSubmit = async (values: z.infer<typeof SignUpFormSchema>) => {
     const response = await fetch("/api/users", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
@@ -57,7 +43,7 @@ const SignUpForm = () => {
     if (response.ok) {
       router.push("/api/auth/signin");
     } else {
-      alert("Registration failed. Please try again.");
+      showErrorToast();
     }
   };
 

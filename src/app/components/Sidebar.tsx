@@ -9,7 +9,7 @@ const Sidebar = () => {
 
   return (
     <header
-      className="w-60 bg-slate-800 text-slate-300 flex 
+      className="w-60 flex bg-primary900
    flex-col gap-4 h-screen fixed top-0 left-0 py-8"
     >
       <div className="flex items-center mb-20">
@@ -22,7 +22,7 @@ const Sidebar = () => {
             className="rounded-full ml-4"
           />
         )}
-        <p className="font-semibold py-2 mx-auto">
+        <p className="font-semibold py-2 mx-auto text-gray300">
           Hello, {session?.user?.name || session?.user?.username}!
         </p>
       </div>

@@ -14,8 +14,6 @@ const GithubSignInButton = () => {
     } catch (error) {
       setIsLoading(false);
       console.error("Failed to sign in with Github", error);
-    } finally {
-      setIsLoading(false);
     }
   };
   return (

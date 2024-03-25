@@ -1,19 +1,10 @@
-import {
-  Dialog,
-  DialogContent,
-  DialogDescription,
-  DialogHeader,
-  DialogTitle,
-  DialogTrigger,
-} from "@/components/ui/dialog";
+"use client";
+import Tasks from "../components/tasks/Tasks";
+import { useGlobalContext } from "../context/GlobalContextProvider";
 
 const Dashboard = () => {
-  return (
-    <div className="flex">
-      Display All tasks
-      <div></div>
-    </div>
-  );
+  const { tasks } = useGlobalContext();
+  return <Tasks title="All tasks" tasks={tasks} />;
 };
 
 export default Dashboard;
