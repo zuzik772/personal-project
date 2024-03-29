@@ -16,6 +16,7 @@ import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { SignUpFormSchema } from "@/app/utils/validationSchemas";
 import { showErrorToast } from "@/app/utils/showErrorToast";
+import axios from "axios";
 
 const SignUpForm = () => {
   const router = useRouter();
@@ -30,17 +31,9 @@ const SignUpForm = () => {
   });
 
   const onSubmit = async (values: z.infer<typeof SignUpFormSchema>) => {
-    const response = await fetch("/api/users", {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({
-        username: values.username,
-        email: values.email,
-        password: values.password,
-      }),
-    });
-
-    if (response.ok) {
+    const response = await axios.post("/api/users", values);
+    console.log(response, values);
+    if (response) {
       router.push("/api/auth/signin");
     } else {
       showErrorToast();

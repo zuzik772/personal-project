@@ -21,8 +21,11 @@ import { signIn } from "next-auth/react";
 import { useRouter } from "next/navigation";
 import { SignInFormSchema } from "@/app/utils/validationSchemas";
 import { showErrorToast } from "@/app/utils/showErrorToast";
+import { useState } from "react";
+import LoadingSpinner from "../icons/LoadingSpinner";
 
 const SignInForm = () => {
+  const [isLoading, setIsLoading] = useState(false);
   const router = useRouter();
   const form = useForm<z.infer<typeof SignInFormSchema>>({
     resolver: zodResolver(SignInFormSchema),
@@ -33,6 +36,7 @@ const SignInForm = () => {
   });
 
   const onSubmit = async (values: z.infer<typeof SignInFormSchema>) => {
+    setIsLoading(true);
     const signInData = await signIn("credentials", {
       email: values.email,
       password: values.password,
@@ -43,6 +47,7 @@ const SignInForm = () => {
       showErrorToast();
     } else {
       router.push("/dashboard");
+      setIsLoading(false);
     }
   };
 
@@ -85,7 +90,9 @@ const SignInForm = () => {
             )}
           />
         </div>
-        <Button className="w-full mt-6" type="submit">
+
+        <Button disabled={isLoading} className="w-full mt-6" type="submit">
+          {isLoading && <LoadingSpinner />}
           Sign in
         </Button>
       </form>

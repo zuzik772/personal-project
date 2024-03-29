@@ -10,61 +10,57 @@ import {
 import axios from "axios";
 import { toast } from "@/components/ui/use-toast";
 import { cn } from "@/lib/utils";
-import LoadingSpinner from "../components/icons/LoadingSpinner";
-import { Task } from "../components/tasks/Tasks";
+
 import { showErrorToast } from "../utils/showErrorToast";
-import { Status } from "@prisma/client";
+import { TaskSchema } from "../utils/validationSchemas";
+import { z } from "zod";
+import { Task } from "../components/tasks/TaskItem";
 
 type GlobalContextProps = {
   tasks: Task[];
-  newTasks: Task[];
-  inProgressTasks: Task[];
-  completedTasks: Task[];
-  importantTasks: Task[];
+  createTask: any;
   deleteTask: (id: number) => void;
 };
 
-const Context: GlobalContextProps = {
-  tasks: [],
-  newTasks: [],
-  inProgressTasks: [],
-  completedTasks: [],
-  importantTasks: [],
-  deleteTask: (id: number) => {},
-};
-
-export const GlobalContext = createContext(Context as GlobalContextProps);
+export const GlobalContext = createContext<GlobalContextProps>(
+  {} as GlobalContextProps
+);
 export const GlobalUpdateContext = createContext({});
+
 const GlobalContextProvider = ({ children }: PropsWithChildren) => {
-  const [isLoading, setIsLoading] = useState(false);
-  const [tasks, setTasks] = useState([]);
+  const [tasks, setTasks] = useState<Task[]>([]);
 
   const allTasks = async () => {
-    setIsLoading(true);
     try {
       const res = await axios.get("/api/tasks");
       setTasks(res.data);
-      setIsLoading(false);
     } catch (error) {
       console.error("Failed to fetch tasks", error);
       showErrorToast();
     }
   };
 
-  const importantTasks = tasks.filter((task: Task) => task.isImportant);
-  const newTasks = tasks.filter((task: Task) => task.status === Status.NEW);
-
-  const inProgressTasks = tasks.filter(
-    (task: Task) => task.status === Status.IN_PROGRESS
-  );
-
-  const completedTasks = tasks.filter(
-    (task: Task) => task.status === Status.COMPLETED
-  );
-
+  const createTask = async (task: z.infer<typeof TaskSchema>) => {
+    try {
+      const res = await axios.post("/api/tasks", task);
+      setTasks((prevTasks) => [res.data, ...prevTasks]);
+      toast({
+        title: "Success",
+        description: "Task created successfully",
+        className: cn(
+          "top-0 right-0 flex fixed md:max-w-[420px] md:top-4 md:right-4"
+        ),
+      });
+      return res;
+    } catch (error) {
+      console.error("Failed to create task", error);
+      showErrorToast();
+    }
+  };
   const deleteTask = async (id: number) => {
     try {
-      const res = await axios.delete(`/api/tasks/${id}`);
+      await axios.delete(`/api/tasks/${id}`);
+      setTasks((prevTasks) => prevTasks.filter((task) => task.id !== id));
       toast({
         title: "Success",
         description: "Task deleted successfully",
@@ -80,18 +76,12 @@ const GlobalContextProvider = ({ children }: PropsWithChildren) => {
 
   useEffect(() => {
     allTasks();
-  }, [tasks]);
-
-  isLoading && <LoadingSpinner />;
-
+  }, []);
   return (
     <GlobalContext.Provider
       value={{
         tasks,
-        newTasks,
-        inProgressTasks,
-        completedTasks,
-        importantTasks,
+        createTask,
         deleteTask,
       }}
     >

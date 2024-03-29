@@ -22,7 +22,7 @@ module.exports = {
         black: "hsl(0, 0%, 8.6%)",
         gray300: "hsl(240, 4%, 89.8%)",
         primary300: "hsl(219, 61%, 63.1%)",
-        primary400: "hsl(223, 80.5%, 55.95%)",
+        primary400: "hsl(217, 42%, 50%)",
         primary500: "hsl(227, 100%, 48.8%)",
         primary700: "hsl(227, 96.5%, 26.7%)",
         primary900: "hsl(227, 100%, 13.7%)",

@@ -8,19 +8,44 @@ import {
 } from "@/components/ui/form";
 import { Textarea } from "@/components/ui/textarea";
 import { Input } from "@/components/ui/input";
-import React from "react";
-
+import React, { useState } from "react";
 import LoadingSpinner from "../icons/LoadingSpinner";
 import { Button } from "@/components/ui/button";
 import { Checkbox } from "@/components/ui/checkbox";
-import { Task } from "../tasks/Tasks";
+import { useGlobalContext } from "@/app/context/GlobalContextProvider";
+import { useRouter } from "next/navigation";
+import { TaskSchema } from "@/app/utils/validationSchemas";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { useForm } from "react-hook-form";
+import { z } from "zod";
+import { showErrorToast } from "@/app/utils/showErrorToast";
 
-type CreateTaskFormProps = {
-  form: any;
-  isLoading: boolean;
-  onSubmit: (values: Task) => void;
-};
-const CreateTaskForm = ({ form, isLoading, onSubmit }: CreateTaskFormProps) => {
+const CreateTaskForm = ({}) => {
+  const { createTask } = useGlobalContext();
+  const [isLoading, setIsLoading] = useState(false);
+  const router = useRouter();
+  const form = useForm<z.infer<typeof TaskSchema>>({
+    resolver: zodResolver(TaskSchema),
+    defaultValues: {
+      title: "",
+      description: "",
+      isImportant: false,
+    },
+  });
+
+  const onSubmit = async (values: z.infer<typeof TaskSchema>) => {
+    setIsLoading(true);
+    console.log(isLoading, values);
+    try {
+      await createTask(values);
+      router.push("/dashboard/new");
+    } catch (error) {
+      showErrorToast();
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
   return (
     <Form {...form}>
       <form onSubmit={form.handleSubmit(onSubmit)} className="w-full ">

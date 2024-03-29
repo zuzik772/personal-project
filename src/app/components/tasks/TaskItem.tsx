@@ -1,6 +1,7 @@
 import { FaRegEdit as EditTaskIcon } from "react-icons/fa";
 import DeleteTaskDialog from "./DeleteTaskDialog";
 import { Status } from "@prisma/client";
+import { MdNotificationImportant as ImportantIcon } from "react-icons/md";
 
 export type Task = {
   id: number;
@@ -18,11 +19,15 @@ const TaskItem = ({ id, title, description, status, isImportant }: Task) => {
         <p className="text-white mb-2">{description}</p>
       </div>
       <div className="flex flex-col justify-between">
-        <div className="flex flex-col text-right">
+        <div className="flex gap-2 items-center justify-end">
           {isImportant && (
-            <p className="text-sm text-yellow-300 font-bold">IMPORTANT</p>
+            <>
+              {/* <Switch checked={field.value} onCheckedChange={field.onChange} /> */}
+
+              <ImportantIcon className="text-yellow-400 icon mt-0" />
+            </>
           )}
-          <p className="text-sm font-semibold mb-2">{status}</p>
+          <p className="text-sm font-semibold">{status}</p>
         </div>
         <div className="flex gap-4 justify-end">
           <EditTaskIcon className="icon hover:scale-125" />

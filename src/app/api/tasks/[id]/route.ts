@@ -7,10 +7,10 @@ export async function DELETE(
 ) {
   try {
     const { id } = params;
-    const task = await prisma.task.delete({
+    const deletedTask = await prisma.task.delete({
       where: { id: Number(id) },
     });
-    return NextResponse.json(task);
+    return NextResponse.json(deletedTask);
   } catch (error) {
     console.error("Error deleting task", error);
     return NextResponse.json(
