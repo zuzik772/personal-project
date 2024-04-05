@@ -10,9 +10,9 @@ const Sidebar = () => {
   return (
     <header
       className="w-60 flex bg-primary900
-   flex-col gap-4 h-screen fixed top-0 left-0 py-8"
+   flex-col gap-10 h-screen fixed top-0 left-0 py-8"
     >
-      <div className="flex items-center mb-20">
+      <div className="flex items-center">
         {session?.user?.image && (
           <Image
             src={session?.user?.image}

@@ -19,6 +19,7 @@ import { Task } from "../components/tasks/TaskItem";
 type GlobalContextProps = {
   tasks: Task[];
   createTask: any;
+  updateImportantTask: any;
   deleteTask: (id: number) => void;
 };
 
@@ -57,6 +58,28 @@ const GlobalContextProvider = ({ children }: PropsWithChildren) => {
       showErrorToast();
     }
   };
+
+  const updateImportantTask = async (id: number, isImportant: boolean) => {
+    console.log("hi from updateImportantTask", id, isImportant);
+    try {
+      const req = await axios.put(`/api/tasks/${id}`, { isImportant });
+      console.log("req", req);
+      console.log("req.data", req.data);
+      setTasks((prevTasks) =>
+        prevTasks.map((t) => (t.id === id ? { ...t, isImportant } : t))
+      );
+      // toast({
+      //   title: "Success",
+      //   description: "Task updated successfully",
+      //   className: cn(
+      //     "top-0 right-0 flex fixed md:max-w-[420px] md:top-4 md:right-4"
+      //   ),
+      // });
+    } catch (error) {
+      console.error("Failed to update task", error);
+      // showErrorToast();
+    }
+  };
   const deleteTask = async (id: number) => {
     try {
       await axios.delete(`/api/tasks/${id}`);
@@ -82,6 +105,7 @@ const GlobalContextProvider = ({ children }: PropsWithChildren) => {
       value={{
         tasks,
         createTask,
+        updateImportantTask,
         deleteTask,
       }}
     >
