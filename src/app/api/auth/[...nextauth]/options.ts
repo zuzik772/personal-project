@@ -49,7 +49,7 @@ export const options: NextAuthOptions = {
           existingUser.password
         );
         if (!passwordMatch) {
-          throw new Error("Password does not match");
+          throw new Error("Invalid credentials");
         }
 
         return {

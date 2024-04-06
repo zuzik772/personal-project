@@ -10,13 +10,20 @@ import {
   FormLabel,
   FormMessage,
 } from "@/components/ui/form";
-import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { SignUpFormSchema } from "@/app/utils/validationSchemas";
-import { showErrorToast } from "@/app/utils/showErrorToast";
-import axios from "axios";
+import axios, { AxiosError } from "axios";
+import { User } from "@prisma/client";
+import { toast } from "@/components/ui/use-toast";
+import { cn } from "@/lib/utils";
+import SubmitButton from "../buttons/SubmitButton";
+
+interface ResponseData {
+  user: User;
+  message: string;
+}
 
 const SignUpForm = () => {
   const router = useRouter();
@@ -29,23 +36,47 @@ const SignUpForm = () => {
       confirmPassword: "",
     },
   });
+  const {
+    control,
+    handleSubmit,
+    setError,
+    formState: { errors, isSubmitting },
+  } = form;
 
   const onSubmit = async (values: z.infer<typeof SignUpFormSchema>) => {
-    const response = await axios.post("/api/users", values);
-    console.log(response, values);
-    if (response) {
+    try {
+      const response = await axios.post("/api/users", values);
+      console.log(response, values);
       router.push("/api/auth/signin");
-    } else {
-      showErrorToast();
+      toast({
+        title: "Success",
+        description: "User created successfully",
+        className: cn(
+          "top-0 right-0 flex fixed md:max-w-[420px] md:top-4 md:right-4"
+        ),
+      });
+    } catch (error) {
+      const axiosError = error as AxiosError<ResponseData>;
+      if (axiosError.response) {
+        setError("root", {
+          message: axiosError.response.data.message,
+        });
+      } else if (axiosError.request) {
+        // The request was made but no response was received
+        console.error("No response received from server");
+      } else {
+        // Something happened in setting up the request that triggered an Error
+        console.error("Error", axiosError.message);
+      }
     }
   };
 
   return (
     <Form {...form}>
-      <form onSubmit={form.handleSubmit(onSubmit)} className="w-full">
+      <form onSubmit={handleSubmit(onSubmit)} className="w-full">
         <div className="space-y-2">
           <FormField
-            control={form.control}
+            control={control}
             name="username"
             render={({ field }) => (
               <FormItem>
@@ -62,7 +93,7 @@ const SignUpForm = () => {
             )}
           />
           <FormField
-            control={form.control}
+            control={control}
             name="email"
             render={({ field }) => (
               <FormItem>
@@ -79,7 +110,7 @@ const SignUpForm = () => {
             )}
           />
           <FormField
-            control={form.control}
+            control={control}
             name="password"
             render={({ field }) => (
               <FormItem>
@@ -96,7 +127,7 @@ const SignUpForm = () => {
             )}
           />
           <FormField
-            control={form.control}
+            control={control}
             name="confirmPassword"
             render={({ field }) => (
               <FormItem>
@@ -113,9 +144,13 @@ const SignUpForm = () => {
             )}
           />
         </div>
-        <Button className="w-full mt-6" type="submit">
-          Sign up
-        </Button>
+        <SubmitButton
+          isSubmitting={isSubmitting}
+          title="Sign Up"
+        ></SubmitButton>
+        {errors.root && (
+          <div className="text-red-500 text-sm mt-2">{errors.root.message}</div>
+        )}
       </form>
       <div className="mx-auto my-4 flex w-full items-center justify-evenly before:mr-4 before:block before:h-px before:flex-grow before:bg-stone-400 after:ml-4 after:block after:h-px after:flex-grow after:bg-stone-400">
         or

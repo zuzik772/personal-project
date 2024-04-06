@@ -1,6 +1,5 @@
 import { getServerSession } from "next-auth";
 import { options } from "./api/auth/[...nextauth]/options";
-import SignInButton from "./components/buttons/SignInButton";
 import SignOutButton from "./components/buttons/SignOutButton";
 import Link from "next/link";
 import { buttonVariants } from "@/components/ui/button";
@@ -18,7 +17,13 @@ export default async function Home() {
         Enter Personal Developemnt Project
       </Link>
       <div className="absolute top-6 right-6">
-        {session ? <SignOutButton /> : <SignInButton />}
+        {session ? (
+          <SignOutButton />
+        ) : (
+          <Link href="signin" className={buttonVariants()}>
+            Sign in
+          </Link>
+        )}
       </div>
     </div>
   );
