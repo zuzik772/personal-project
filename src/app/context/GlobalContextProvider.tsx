@@ -19,7 +19,7 @@ import { Task } from "../components/tasks/TaskItem";
 type GlobalContextProps = {
   tasks: Task[];
   createTask: any;
-  updateImportantTask: any;
+  updateTask: any;
   deleteTask: (id: number) => void;
 };
 
@@ -59,27 +59,27 @@ const GlobalContextProvider = ({ children }: PropsWithChildren) => {
     }
   };
 
-  const updateImportantTask = async (id: number, isImportant: boolean) => {
-    console.log("hi from updateImportantTask", id, isImportant);
+  const updateTask = async (id: number, task: Task) => {
     try {
-      const req = await axios.put(`/api/tasks/${id}`, { isImportant });
-      console.log("req", req);
+      const req = await axios.put(`/api/tasks/${id}`, { task });
       console.log("req.data", req.data);
       setTasks((prevTasks) =>
-        prevTasks.map((t) => (t.id === id ? { ...t, isImportant } : t))
+        prevTasks.map((t) => (t.id === id ? { ...t, ...task } : t))
       );
-      // toast({
-      //   title: "Success",
-      //   description: "Task updated successfully",
-      //   className: cn(
-      //     "top-0 right-0 flex fixed md:max-w-[420px] md:top-4 md:right-4"
-      //   ),
-      // });
+      toast({
+        title: "Success",
+        description: "Task updated successfully",
+        className: cn(
+          "top-0 right-0 flex fixed md:max-w-[420px] md:top-4 md:right-4"
+        ),
+      });
+      return req.data;
     } catch (error) {
       console.error("Failed to update task", error);
-      // showErrorToast();
+      showErrorToast();
     }
   };
+
   const deleteTask = async (id: number) => {
     try {
       await axios.delete(`/api/tasks/${id}`);
@@ -105,7 +105,7 @@ const GlobalContextProvider = ({ children }: PropsWithChildren) => {
       value={{
         tasks,
         createTask,
-        updateImportantTask,
+        updateTask,
         deleteTask,
       }}
     >

@@ -17,27 +17,44 @@ import { TaskSchema } from "@/app/utils/validationSchemas";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
+import axios from "axios";
+import { useEffect } from "react";
+import StatusDropdown from "../tasks/StatusDropdown";
 
-const CreateTaskForm = ({}) => {
-  const { createTask } = useGlobalContext();
+type Props = {
+  id: number;
+};
+
+const UpdateTaskForm = ({ id }: Props) => {
+  const { updateTask } = useGlobalContext();
   const router = useRouter();
   const form = useForm<z.infer<typeof TaskSchema>>({
     resolver: zodResolver(TaskSchema),
-    defaultValues: {
-      title: "",
-      description: "",
-      isImportant: false,
-    },
   });
 
   const {
     control,
     handleSubmit,
     formState: { isSubmitting },
+    reset,
   } = form;
 
+  useEffect(() => {
+    const fetchTask = async () => {
+      try {
+        const res = await axios.get(`/api/tasks/${id}`);
+        console.log(res.data);
+        reset(res.data); // set the default values to the fetched task
+      } catch (error) {
+        console.error("Failed to fetch task", error);
+      }
+    };
+
+    fetchTask();
+  }, [reset, id]);
+
   const onSubmit = async (values: z.infer<typeof TaskSchema>) => {
-    await createTask(values);
+    await updateTask(id, values);
     router.push("/dashboard/new");
   };
 
@@ -100,7 +117,7 @@ const CreateTaskForm = ({}) => {
         <div className="flex justify-end">
           <Button disabled={isSubmitting} type="submit">
             {isSubmitting && <LoadingSpinner />}
-            Create task
+            Update task
           </Button>
         </div>
       </form>
@@ -108,4 +125,4 @@ const CreateTaskForm = ({}) => {
   );
 };
 
-export default CreateTaskForm;
+export default UpdateTaskForm;
