@@ -18,6 +18,7 @@ import { Task } from "../components/tasks/TaskItem";
 
 type GlobalContextProps = {
   tasks: Task[];
+  setTasks: any;
   createTask: any;
   updateTask: any;
   deleteTask: (id: number) => void;
@@ -104,6 +105,7 @@ const GlobalContextProvider = ({ children }: PropsWithChildren) => {
     <GlobalContext.Provider
       value={{
         tasks,
+        setTasks,
         createTask,
         updateTask,
         deleteTask,
