@@ -26,5 +26,4 @@ export const TaskSchema = z.object({
     .min(1, "Description is required")
     .min(10, "Description must have at least 10 characters"),
   isImportant: z.boolean(),
-  status: z.enum(["OPEN", "IN_PROGRESS", "DONE"]),
 });

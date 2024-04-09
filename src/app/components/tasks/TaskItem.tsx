@@ -1,13 +1,6 @@
-import { FaRegEdit as EditTaskIcon } from "react-icons/fa";
 import DeleteTaskDialog from "./DeleteTaskDialog";
 import { Status } from "@prisma/client";
 import { MdNotificationImportant as ImportantIcon } from "react-icons/md";
-import { Switch } from "@/components/ui/switch";
-import { useState } from "react";
-import { set } from "date-fns";
-import { useGlobalContext } from "@/app/context/GlobalContextProvider";
-import { Dropdown } from "react-day-picker";
-import { DropdownMenu } from "@/components/ui/dropdown-menu";
 import StatusDropdown from "./StatusDropdown";
 import EditTaskDialog from "./EditTaskDialog";
 
@@ -23,24 +16,23 @@ const TaskItem = (task: Task) => {
   const { id, title, description, status, isImportant } = task;
 
   return (
-    <div className="max-w-sm rounded-lg shadow-md bg-primary300 text-white flex w-full gap-2 itemx-center justify-between p-4">
+    <div className="relative max-w-[350px] rounded-lg shadow-md bg-primary300 text-white flex w-full gap-2 itemx-center justify-between lg:p-4 p-3">
       <div>
-        <p className="flex items-center gap-2 font-bold text-xl mb-2">
+        <p className="flex items-center gap-2 font-bold text-lg mb-2">
           {isImportant && (
             <ImportantIcon className="text-yellow-400 icon mt-0" />
           )}
           {title}
         </p>
-        <p className="mb-2">{description}</p>
+        <p className="mb-2 text-sm">{description}</p>
       </div>
 
-      <div className="flex flex-col justify-between ">
+      <div className="absolute top-2 right-2 flex flex-col justify-between">
         <StatusDropdown id={id} status={status} />
-
-        <div className="flex gap-4 justify-end">
-          <EditTaskDialog id={id} />
-          <DeleteTaskDialog id={id} />
-        </div>
+      </div>
+      <div className="flex items-end gap-2">
+        <EditTaskDialog id={id} />
+        <DeleteTaskDialog id={id} />
       </div>
     </div>
   );

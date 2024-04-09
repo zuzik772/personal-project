@@ -5,11 +5,15 @@ import { usePathname } from "next/navigation";
 type NavItemProps = {
   path: string;
   children: React.ReactNode;
+  onClick?: () => void;
 };
-const NavItem = ({ children, path }: NavItemProps) => {
+const NavItem = ({ children, path, onClick }: NavItemProps) => {
   const currectPath = usePathname();
   return (
-    <li className="hover:bg-primary300 transition-colors w-full cursor-pointer">
+    <li
+      className="hover:bg-primary300 transition-colors w-full cursor-pointer"
+      onClick={onClick}
+    >
       <Link
         href={path}
         className={`${

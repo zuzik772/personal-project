@@ -1,5 +1,4 @@
 "use client";
-import { useGlobalContext } from "@/app/context/GlobalContextProvider";
 import {
   Dialog,
   DialogContent,
@@ -8,15 +7,16 @@ import {
   DialogTrigger,
 } from "@/components/ui/dialog";
 import { FaRegEdit as EditTaskIcon } from "react-icons/fa";
-import CreateTaskForm from "../forms/CreateTaskForm";
 import UpdateTaskForm from "../forms/UpdateTaskForm";
+import { useState } from "react";
 
 type Props = {
   id: number;
 };
 const EditTaskDialog = ({ id }: Props) => {
+  const [open, setOpen] = useState(false);
   return (
-    <Dialog>
+    <Dialog open={open} onOpenChange={setOpen}>
       <DialogTrigger asChild>
         <EditTaskIcon className="icon hover:scale-125" />
       </DialogTrigger>
@@ -25,7 +25,7 @@ const EditTaskDialog = ({ id }: Props) => {
           <DialogTitle>Update task</DialogTitle>
         </DialogHeader>
 
-        <UpdateTaskForm id={id} />
+        <UpdateTaskForm id={id} setOpen={setOpen} />
       </DialogContent>
     </Dialog>
   );

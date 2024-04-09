@@ -6,7 +6,9 @@ const DashboardLayout = ({ children }: PropsWithChildren) => {
   return (
     <GlobalContextProvider>
       <Sidebar />
-      <div className="h-screen ml-60 flex flex-col gap-8 p-10">{children}</div>
+      <div className="h-screen lg:ml-60 flex flex-col w-full lg:gap-8 gap-6 lg:p-10 pt-4 lg:pt-0 p-4">
+        {children}
+      </div>
     </GlobalContextProvider>
   );
 };

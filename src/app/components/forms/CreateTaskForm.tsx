@@ -12,15 +12,16 @@ import LoadingSpinner from "../icons/LoadingSpinner";
 import { Button } from "@/components/ui/button";
 import { Checkbox } from "@/components/ui/checkbox";
 import { useGlobalContext } from "@/app/context/GlobalContextProvider";
-import { useRouter } from "next/navigation";
 import { TaskSchema } from "@/app/utils/validationSchemas";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
 
-const CreateTaskForm = ({}) => {
+type Props = {
+  setOpen: (value: boolean) => void;
+};
+const CreateTaskForm = ({ setOpen }: Props) => {
   const { createTask } = useGlobalContext();
-  const router = useRouter();
   const form = useForm<z.infer<typeof TaskSchema>>({
     resolver: zodResolver(TaskSchema),
     defaultValues: {
@@ -38,12 +39,12 @@ const CreateTaskForm = ({}) => {
 
   const onSubmit = async (values: z.infer<typeof TaskSchema>) => {
     await createTask(values);
-    router.push("/dashboard/new");
+    setOpen(false);
   };
 
   return (
     <Form {...form}>
-      <form onSubmit={handleSubmit(onSubmit)} className="w-full ">
+      <form onSubmit={handleSubmit(onSubmit)} className="w-full">
         <div className="space-y-8">
           <FormField
             control={control}

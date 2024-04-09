@@ -18,7 +18,7 @@ import { Task } from "../components/tasks/TaskItem";
 
 type GlobalContextProps = {
   tasks: Task[];
-  createTask: any;
+  createTask: (task: z.infer<typeof TaskSchema>) => Promise<any>;
   updateTask: any;
   deleteTask: (id: number) => void;
 };

@@ -8,19 +8,24 @@ export default async function Home() {
   //getServerSession is faster than useSession
   const session = await getServerSession(options);
   return (
-    <div className="p-6 min-h-screen w-full h-full flex flex-col items-center justify-center">
-      <h1 className="text-3xl mb-4 text-center">
+    <div className="min-h-screen w-full flex flex-col items-center justify-center">
+      <h1 className="lg:text-3xl text-xl px-2 mb-4 text-center">
         Hello [Rasmus, Magnus, Eugenio], please{" "}
-        {!session ? "sign in " : "enjoy"} the show from Zuzana
+        {!session ? "sign in to enjoy" : "enjoy"} the show from Zuzana
       </h1>
       <Link href="/dashboard" className={buttonVariants()}>
         Enter Personal Developemnt Project
       </Link>
-      <div className="absolute top-6 right-6">
+      <div>
         {session ? (
           <SignOutButton />
         ) : (
-          <Link href="signin" className={buttonVariants()}>
+          <Link
+            href="signin"
+            className={`absolute top-6 right-6 ${buttonVariants({
+              variant: "outline",
+            })}`}
+          >
             Sign in
           </Link>
         )}

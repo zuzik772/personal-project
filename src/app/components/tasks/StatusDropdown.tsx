@@ -1,7 +1,6 @@
 "use client";
 
 import * as React from "react";
-import { DropdownMenuCheckboxItemProps } from "@radix-ui/react-dropdown-menu";
 import { useGlobalContext } from "@/app/context/GlobalContextProvider";
 import { Button } from "@/components/ui/button";
 import {
@@ -15,8 +14,7 @@ import {
 import { Status } from "@prisma/client";
 import { MdOutlineTaskAlt as CompletedIcon } from "react-icons/md";
 import { GrInProgress as InProgressIcon } from "react-icons/gr";
-import { BsListTask as NewTasksIcon } from "react-icons/bs";
-import { MdKeyboardArrowDown as DropdownIcon } from "react-icons/md";
+import { cn } from "@/lib/utils";
 
 type Props = {
   id: number;
@@ -31,22 +29,14 @@ const StatusDropdown = ({ id, status }: Props) => {
   return (
     <DropdownMenu>
       <DropdownMenuTrigger asChild>
-        <Button
-          variant="ghost"
-          // className="bg-primary300 text-white hover:bg-primary400 border-2 border-solid border-white "
-        >
-          {
-            status === "NEW" ? (
-              "New"
-            ) : status === "IN_PROGRESS" ? (
-              <InProgressIcon className="text-lg " />
-            ) : (
-              // "In progress"
-              <CompletedIcon className="text-xl text-primary900" />
-            )
-            // "Completed"
-          }
-          {/* <DropdownIcon className="icon m-0" /> */}
+        <Button variant="ghost" className={cn("px-2")}>
+          {status === "NEW" ? (
+            "New"
+          ) : status === "IN_PROGRESS" ? (
+            <InProgressIcon className="text-lg text-primary900" />
+          ) : (
+            <CompletedIcon className="text-xl text-primary900" />
+          )}
         </Button>
       </DropdownMenuTrigger>
       <DropdownMenuContent className="w-40">

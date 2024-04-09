@@ -12,22 +12,20 @@ import LoadingSpinner from "../icons/LoadingSpinner";
 import { Button } from "@/components/ui/button";
 import { Checkbox } from "@/components/ui/checkbox";
 import { useGlobalContext } from "@/app/context/GlobalContextProvider";
-import { useRouter } from "next/navigation";
 import { TaskSchema } from "@/app/utils/validationSchemas";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
 import axios from "axios";
 import { useEffect } from "react";
-import StatusDropdown from "../tasks/StatusDropdown";
 
 type Props = {
   id: number;
+  setOpen: (value: boolean) => void;
 };
 
-const UpdateTaskForm = ({ id }: Props) => {
+const UpdateTaskForm = ({ id, setOpen }: Props) => {
   const { updateTask } = useGlobalContext();
-  const router = useRouter();
   const form = useForm<z.infer<typeof TaskSchema>>({
     resolver: zodResolver(TaskSchema),
   });
@@ -55,7 +53,7 @@ const UpdateTaskForm = ({ id }: Props) => {
 
   const onSubmit = async (values: z.infer<typeof TaskSchema>) => {
     await updateTask(id, values);
-    router.push("/dashboard/new");
+    setOpen(false);
   };
 
   return (
