@@ -5,7 +5,7 @@ import {
   PropsWithChildren,
   useContext,
   useEffect,
-  useState,
+  useReducer,
 } from "react";
 import axios from "axios";
 import { toast } from "@/components/ui/use-toast";
@@ -23,18 +23,51 @@ type GlobalContextProps = {
   deleteTask: (id: number) => void;
 };
 
+type State = {
+  tasks: Task[];
+};
+
+type Action =
+  | { type: "SET_TASKS"; payload: Task[] }
+  | { type: "ADD_TASK"; payload: Task }
+  | { type: "UPDATE_TASK"; payload: Task }
+  | { type: "DELETE_TASK"; payload: number };
+
+const reducer = (state: State, action: Action): State => {
+  switch (action.type) {
+    case "SET_TASKS":
+      return { ...state, tasks: action.payload };
+    case "ADD_TASK":
+      return { ...state, tasks: [action.payload, ...state.tasks] };
+    case "UPDATE_TASK":
+      return {
+        ...state,
+        tasks: state.tasks.map((task) =>
+          task.id === action.payload.id ? action.payload : task
+        ),
+      };
+    case "DELETE_TASK":
+      return {
+        ...state,
+        tasks: state.tasks.filter((task) => task.id !== action.payload),
+      };
+    default:
+      return state;
+  }
+};
+
 export const GlobalContext = createContext<GlobalContextProps>(
   {} as GlobalContextProps
 );
 export const GlobalUpdateContext = createContext({});
 
 const GlobalContextProvider = ({ children }: PropsWithChildren) => {
-  const [tasks, setTasks] = useState<Task[]>([]);
+  const [state, dispatch] = useReducer(reducer, { tasks: [] });
 
   const allTasks = async () => {
     try {
       const res = await axios.get("/api/tasks");
-      setTasks(res.data);
+      dispatch({ type: "SET_TASKS", payload: res.data });
     } catch (error) {
       console.error("Failed to fetch tasks", error);
       showErrorToast();
@@ -44,7 +77,8 @@ const GlobalContextProvider = ({ children }: PropsWithChildren) => {
   const createTask = async (task: z.infer<typeof TaskSchema>) => {
     try {
       const res = await axios.post("/api/tasks", task);
-      setTasks((prevTasks) => [res.data, ...prevTasks]);
+      //setTasks((prevTasks) => [res.data, ...prevTasks]);
+      dispatch({ type: "ADD_TASK", payload: res.data });
       toast({
         title: "Success",
         description: "Task created successfully",
@@ -63,9 +97,10 @@ const GlobalContextProvider = ({ children }: PropsWithChildren) => {
     try {
       const req = await axios.put(`/api/tasks/${id}`, { task });
       console.log("req.data", req.data);
-      setTasks((prevTasks) =>
-        prevTasks.map((t) => (t.id === id ? { ...t, ...task } : t))
-      );
+      // setTasks((prevTasks) =>
+      //   prevTasks.map((t) => (t.id === id ? { ...t, ...task } : t))
+      // );
+      dispatch({ type: "UPDATE_TASK", payload: req.data });
       toast({
         title: "Success",
         description: "Task updated successfully",
@@ -83,7 +118,8 @@ const GlobalContextProvider = ({ children }: PropsWithChildren) => {
   const deleteTask = async (id: number) => {
     try {
       await axios.delete(`/api/tasks/${id}`);
-      setTasks((prevTasks) => prevTasks.filter((task) => task.id !== id));
+      // setTasks((prevTasks) => prevTasks.filter((task) => task.id !== id));
+      dispatch({ type: "DELETE_TASK", payload: id });
       toast({
         title: "Success",
         description: "Task deleted successfully",
@@ -103,7 +139,7 @@ const GlobalContextProvider = ({ children }: PropsWithChildren) => {
   return (
     <GlobalContext.Provider
       value={{
-        tasks,
+        tasks: state.tasks,
         createTask,
         updateTask,
         deleteTask,
