@@ -8,13 +8,11 @@ import {
   useReducer,
 } from "react";
 import axios from "axios";
-import { toast } from "@/components/ui/use-toast";
-import { cn } from "@/lib/utils";
 
-import { showErrorToast } from "../utils/showErrorToast";
 import { TaskSchema } from "../utils/validationSchemas";
 import { z } from "zod";
 import { Task } from "../components/tasks/TaskItem";
+import { useToastFunctions } from "../utils/showToast";
 
 type GlobalContextProps = {
   tasks: Task[];
@@ -63,6 +61,7 @@ export const GlobalUpdateContext = createContext({});
 
 const GlobalContextProvider = ({ children }: PropsWithChildren) => {
   const [state, dispatch] = useReducer(reducer, { tasks: [] });
+  const { showSuccessToast, showErrorToast } = useToastFunctions();
 
   const allTasks = async () => {
     try {
@@ -77,15 +76,8 @@ const GlobalContextProvider = ({ children }: PropsWithChildren) => {
   const createTask = async (task: z.infer<typeof TaskSchema>) => {
     try {
       const res = await axios.post("/api/tasks", task);
-      //setTasks((prevTasks) => [res.data, ...prevTasks]);
       dispatch({ type: "ADD_TASK", payload: res.data });
-      toast({
-        title: "Success",
-        description: "Task created successfully",
-        className: cn(
-          "top-0 right-0 flex fixed md:max-w-[420px] md:top-4 md:right-4"
-        ),
-      });
+      showSuccessToast("Task created");
       return res;
     } catch (error) {
       console.error("Failed to create task", error);
@@ -97,17 +89,8 @@ const GlobalContextProvider = ({ children }: PropsWithChildren) => {
     try {
       const req = await axios.put(`/api/tasks/${id}`, { task });
       console.log("req.data", req.data);
-      // setTasks((prevTasks) =>
-      //   prevTasks.map((t) => (t.id === id ? { ...t, ...task } : t))
-      // );
       dispatch({ type: "UPDATE_TASK", payload: req.data });
-      toast({
-        title: "Success",
-        description: "Task updated successfully",
-        className: cn(
-          "top-0 right-0 flex fixed md:max-w-[420px] md:top-4 md:right-4"
-        ),
-      });
+      showSuccessToast("Task updated");
       return req.data;
     } catch (error) {
       console.error("Failed to update task", error);
@@ -118,15 +101,8 @@ const GlobalContextProvider = ({ children }: PropsWithChildren) => {
   const deleteTask = async (id: number) => {
     try {
       await axios.delete(`/api/tasks/${id}`);
-      // setTasks((prevTasks) => prevTasks.filter((task) => task.id !== id));
       dispatch({ type: "DELETE_TASK", payload: id });
-      toast({
-        title: "Success",
-        description: "Task deleted successfully",
-        className: cn(
-          "top-0 right-0 flex fixed md:max-w-[420px] md:top-4 md:right-4"
-        ),
-      });
+      showSuccessToast("Task deleted");
     } catch (error) {
       console.error("Failed to delete task", error);
       showErrorToast();
