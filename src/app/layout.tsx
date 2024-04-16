@@ -1,7 +1,11 @@
 import type { Metadata } from "next";
 import { Inter } from "next/font/google";
 import "./globals.css";
-import ThemeProvider from "./theme-provider";
+
+import AuthProvider from "./context/AuthProvider";
+import { Toaster } from "@/components/ui/toaster";
+import NextTopLoader from "nextjs-toploader";
+
 const inter = Inter({ subsets: ["latin"] });
 
 export const metadata: Metadata = {
@@ -17,7 +21,14 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body className={inter.className}>
-        <ThemeProvider>{children}</ThemeProvider>
+        <NextTopLoader height={4} showSpinner={false} />
+        <AuthProvider>
+          <main className="h-screen flex justify-center items-center">
+            {children}
+          </main>
+        </AuthProvider>
+
+        <Toaster />
       </body>
     </html>
   );
