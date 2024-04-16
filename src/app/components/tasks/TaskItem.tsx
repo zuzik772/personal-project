@@ -13,7 +13,7 @@ export type Task = {
 };
 
 const TaskItem = (task: Task) => {
-  const { id, title, description, status, isImportant } = task;
+  const { id, title, description, isImportant } = task;
 
   return (
     <div className="relative max-w-[350px] rounded-lg shadow-md bg-primary300 text-white flex w-full gap-2 itemx-center justify-between lg:p-4 p-3">
@@ -28,7 +28,7 @@ const TaskItem = (task: Task) => {
       </div>
 
       <div className="absolute top-2 right-2 flex flex-col justify-between">
-        <StatusDropdown id={id} status={status} />
+        <StatusDropdown {...task} />
       </div>
       <div className="flex items-end gap-2">
         <EditTaskDialog id={id} />

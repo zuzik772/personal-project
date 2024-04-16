@@ -17,7 +17,10 @@ import { useToastFunctions } from "../utils/showToast";
 type GlobalContextProps = {
   tasks: Task[];
   createTask: (task: z.infer<typeof TaskSchema>) => Promise<any>;
-  updateTask: any;
+  updateTask: (
+    id: number,
+    task: Task | z.infer<typeof TaskSchema>
+  ) => Promise<Task>;
   deleteTask: (id: number) => void;
 };
 
@@ -85,7 +88,10 @@ const GlobalContextProvider = ({ children }: PropsWithChildren) => {
     }
   };
 
-  const updateTask = async (id: number, task: Task) => {
+  const updateTask = async (
+    id: number,
+    task: Task | z.infer<typeof TaskSchema>
+  ) => {
     try {
       const req = await axios.put(`/api/tasks/${id}`, { task });
       console.log("req.data", req.data);
