@@ -20,7 +20,7 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en">
-      <body className={inter.className}>
+      <body className={`${inter.className} antialiased`}>
         <NextTopLoader height={4} showSpinner={false} />
         <AuthProvider>
           <main className="h-screen flex justify-center items-center">
