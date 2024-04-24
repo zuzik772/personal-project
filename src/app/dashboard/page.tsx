@@ -1,10 +1,8 @@
-"use client";
+import { TaskTitles } from "@/types/TaskTitles";
 import Tasks from "../components/tasks/Tasks";
-import { useGlobalContext } from "../context/GlobalContextProvider";
 
 const Dashboard = () => {
-  const { tasks } = useGlobalContext();
-  return <Tasks title="All tasks" tasks={tasks} />;
+  return <Tasks title={TaskTitles.All} />;
 };
 
 export default Dashboard;

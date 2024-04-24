@@ -1,35 +1,17 @@
-"use client";
-import { useState } from "react";
-import { FaSignOutAlt as SignOutIcon } from "react-icons/fa";
+import { TiPower as SignOutIcon } from "react-icons/ti";
 import { Button } from "@/components/ui/button";
 import { signOut } from "next-auth/react";
-import LoadingSpinner from "../icons/LoadingSpinner";
-import { usePathname } from "next/navigation";
 
 const SignOutButton = () => {
-  const [isLoading, setIsLoading] = useState(false);
-  const currentPath = usePathname();
-  const handleSignOut = async () => {
-    setIsLoading(true);
-    try {
-      await signOut({ callbackUrl: "/signin" });
-    } catch (error) {
-      console.error("Failed to sign out", error);
-    } finally {
-      setIsLoading(false);
-    }
-  };
-
   return (
     <Button
-      variant={`${currentPath === "/" ? "outline" : "default"}`}
-      disabled={isLoading}
-      onClick={handleSignOut}
-      className={`${
-        currentPath === "/" ? "absolute top-6 right-6" : "absolute bottom-8"
-      }`}
+      variant="default"
+      onClick={async () => {
+        await signOut({ callbackUrl: "/signin" });
+      }}
+      className={"absolute bottom-8 flex items-center"}
     >
-      {isLoading ? <LoadingSpinner /> : <SignOutIcon className="mr-2" />}
+      <SignOutIcon className="w-7 h-7" />
       Sign out
     </Button>
   );

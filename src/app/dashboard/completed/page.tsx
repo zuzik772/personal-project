@@ -1,14 +1,8 @@
-"use client";
 import Tasks from "@/app/components/tasks/Tasks";
-import { useGlobalContext } from "../../context/GlobalContextProvider";
-import { Status } from "@prisma/client";
+import { TaskTitles } from "@/types/TaskTitles";
 
 const CompletedTasks = () => {
-  const { tasks } = useGlobalContext();
-  const completedTasks = tasks.filter(
-    (task) => task.status === Status.COMPLETED
-  );
-  return <Tasks title="Completed tasks" tasks={completedTasks} />;
+  return <Tasks title={TaskTitles.Completed} />;
 };
 
 export default CompletedTasks;

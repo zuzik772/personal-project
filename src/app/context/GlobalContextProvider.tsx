@@ -5,6 +5,7 @@ import {
   PropsWithChildren,
   useContext,
   useEffect,
+  useCallback,
   useReducer,
 } from "react";
 import axios from "axios";
@@ -66,7 +67,7 @@ const GlobalContextProvider = ({ children }: PropsWithChildren) => {
   const [state, dispatch] = useReducer(reducer, { tasks: [] });
   const { showSuccessToast, showErrorToast } = useToastFunctions();
 
-  const allTasks = async () => {
+  const allTasks = useCallback(async () => {
     try {
       const res = await axios.get("/api/tasks");
       dispatch({ type: "SET_TASKS", payload: res.data });
@@ -74,7 +75,7 @@ const GlobalContextProvider = ({ children }: PropsWithChildren) => {
       console.error("Failed to fetch tasks", error);
       showErrorToast();
     }
-  };
+  }, []);
 
   const createTask = async (task: z.infer<typeof TaskSchema>) => {
     try {
@@ -117,7 +118,7 @@ const GlobalContextProvider = ({ children }: PropsWithChildren) => {
 
   useEffect(() => {
     allTasks();
-  }, []);
+  }, [allTasks]);
   return (
     <GlobalContext.Provider
       value={{

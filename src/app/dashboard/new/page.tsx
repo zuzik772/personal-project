@@ -1,12 +1,8 @@
-"use client";
 import Tasks from "@/app/components/tasks/Tasks";
-import { useGlobalContext } from "../../context/GlobalContextProvider";
-import { Status } from "@prisma/client";
+import { TaskTitles } from "@/types/TaskTitles";
 
 const NewTasks = () => {
-  const { tasks } = useGlobalContext();
-  const newTasks = tasks.filter((task) => task.status === Status.NEW);
-  return <Tasks title="New tasks" tasks={newTasks} />;
+  return <Tasks title={TaskTitles.New} />;
 };
 
 export default NewTasks;

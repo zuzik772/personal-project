@@ -1,7 +1,11 @@
 import { PropsWithChildren } from "react";
 import Sidebar from "../components/Sidebar";
 import GlobalContextProvider from "../context/GlobalContextProvider";
+import { Metadata } from "next";
 
+export const metadata: Metadata = {
+  title: "Dashboard",
+};
 const DashboardLayout = ({ children }: PropsWithChildren) => {
   return (
     <GlobalContextProvider>

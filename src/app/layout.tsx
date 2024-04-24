@@ -7,10 +7,15 @@ import { Toaster } from "@/components/ui/toaster";
 import NextTopLoader from "nextjs-toploader";
 
 const inter = Inter({ subsets: ["latin"] });
-
+//2 options either metadata object or generateMetadata function
+//more info: https://nextjs.org/docs/app/api-reference/functions/generate-metadata#metadata-object
 export const metadata: Metadata = {
-  title: "Zuzana's personal development project",
+  title: {
+    template: "%s | Zuzana's personal development project",
+    default: "Zuzana's personal development project",
+  },
   description: "Personal development project for Shape Games",
+  keywords: ["personal development", "shape games", "nextjs"],
 };
 
 export default function RootLayout({
