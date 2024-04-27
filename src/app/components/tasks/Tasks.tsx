@@ -3,11 +3,13 @@ import TaskItem, { Task } from "./TaskItem";
 import CreateTaskDialog from "../CreateTaskDialog";
 import { useGlobalContext } from "../../context/GlobalContextProvider";
 import { TaskTitles } from "@/types/TaskTitles";
+import Search from "../Search";
 
 type TaskProps = {
   title: TaskTitles;
+  query: string;
 };
-const Tasks = ({ title }: TaskProps) => {
+const Tasks = ({ query, title }: TaskProps) => {
   const { tasks } = useGlobalContext();
 
   const taskFilters: Record<TaskTitles, Task[]> = {
@@ -20,14 +22,21 @@ const Tasks = ({ title }: TaskProps) => {
     ),
   };
 
-  const filteredTasks =
+  let filteredTasks =
     taskFilters[title] || tasks.filter((task) => task.title.includes(title));
+
+  if (query) {
+    filteredTasks = filteredTasks.filter((task) =>
+      task.title.toLowerCase().includes(query.toLowerCase())
+    );
+  }
 
   return (
     <>
       <h1 className="text-xl font-semibold mt-10 lg:text-start text-center">
         {title}
       </h1>
+      <Search placeholder="Search tasks" />
       <div className="absolute lg:top-10 lg:right-10 top-4 right-4">
         <CreateTaskDialog isTitle={false} />
       </div>

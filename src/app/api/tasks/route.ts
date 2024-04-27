@@ -22,9 +22,17 @@ export async function POST(req: NextRequest) {
   return NextResponse.json(newTask, { status: 201 });
 }
 
-export async function GET() {
+export async function GET(req: NextRequest) {
   try {
-    const tasks = await prisma.task.findMany();
+    const searchQuery = req.nextUrl.searchParams.get("query") || "";
+    const tasks = await prisma.task.findMany({
+      where: {
+        title: {
+          contains: searchQuery,
+          mode: "insensitive",
+        },
+      },
+    });
     return NextResponse.json(tasks);
   } catch (error) {
     console.error("Error fetching tasks", error);
