@@ -1,11 +1,7 @@
-import LoadingSpinner from "../components/icons/LoadingSpinner";
+import TaskItemSkeletonWrapper from "../components/tasks/TaskItemSkeletonWrapper";
 
 const Loading = () => {
-  return (
-    <div className="flex justify-center items-center h-screen">
-      <LoadingSpinner />
-    </div>
-  );
+  return <TaskItemSkeletonWrapper />;
 };
 
 export default Loading;

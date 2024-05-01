@@ -15,15 +15,13 @@ import { Status } from "@prisma/client";
 import { MdOutlineTaskAlt as CompletedIcon } from "react-icons/md";
 import { GrInProgress as InProgressIcon } from "react-icons/gr";
 import { cn } from "@/lib/utils";
+import { Task } from "./TaskItem";
 
-type Props = {
-  id: number;
-  status: Status;
-};
-const StatusDropdown = ({ id, status }: Props) => {
+const StatusDropdown = (task: Task) => {
   const { updateTask } = useGlobalContext();
+  const { id, status } = task;
   const handleStatusChange = (newStatus: Status) => {
-    updateTask(id, { status: newStatus });
+    updateTask(id, { ...task, status: newStatus });
   };
 
   return (

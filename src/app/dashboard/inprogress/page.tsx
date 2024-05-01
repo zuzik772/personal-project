@@ -1,14 +1,10 @@
-"use client";
 import Tasks from "@/app/components/tasks/Tasks";
-import { useGlobalContext } from "../../context/GlobalContextProvider";
-import { Status } from "@prisma/client";
+import { SearchParamsProps } from "../page";
+import { TaskTitles } from "@/types/TaskTitles";
 
-const InProgressTasks = () => {
-  const { tasks } = useGlobalContext();
-  const inProgressTasks = tasks.filter(
-    (task) => task.status === Status.IN_PROGRESS
-  );
-  return <Tasks title="In progress tasks" tasks={inProgressTasks} />;
+const InProgressTasks = async ({ searchParams }: SearchParamsProps) => {
+  const query = searchParams.query || "";
+  return <Tasks title={TaskTitles.InProgress} query={query} />;
 };
 
 export default InProgressTasks;

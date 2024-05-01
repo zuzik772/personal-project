@@ -1,14 +1,11 @@
-"use client";
 import Tasks from "@/app/components/tasks/Tasks";
-import { useGlobalContext } from "../../context/GlobalContextProvider";
-import { Status } from "@prisma/client";
+import { TaskTitles } from "@/types/TaskTitles";
+import { SearchParamsProps } from "../page";
 
-const CompletedTasks = () => {
-  const { tasks } = useGlobalContext();
-  const completedTasks = tasks.filter(
-    (task) => task.status === Status.COMPLETED
-  );
-  return <Tasks title="Completed tasks" tasks={completedTasks} />;
+const CompletedTasks = async ({ searchParams }: SearchParamsProps) => {
+  const query = searchParams.query || "";
+
+  return <Tasks title={TaskTitles.Completed} query={query} />;
 };
 
 export default CompletedTasks;

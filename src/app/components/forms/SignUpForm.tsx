@@ -16,8 +16,7 @@ import { useRouter } from "next/navigation";
 import { SignUpFormSchema } from "@/app/utils/validationSchemas";
 import axios, { AxiosError } from "axios";
 import { User } from "@prisma/client";
-import { toast } from "@/components/ui/use-toast";
-import { cn } from "@/lib/utils";
+import { useToastFunctions } from "../../utils/showToast";
 import SubmitButton from "../buttons/SubmitButton";
 
 interface ResponseData {
@@ -26,6 +25,7 @@ interface ResponseData {
 }
 
 const SignUpForm = () => {
+  const { showSuccessToast } = useToastFunctions();
   const router = useRouter();
   const form = useForm<z.infer<typeof SignUpFormSchema>>({
     resolver: zodResolver(SignUpFormSchema),
@@ -48,13 +48,7 @@ const SignUpForm = () => {
       const response = await axios.post("/api/users", values);
       console.log(response, values);
       router.push("/api/auth/signin");
-      toast({
-        title: "Success",
-        description: "User created successfully",
-        className: cn(
-          "top-0 right-0 flex fixed md:max-w-[420px] md:top-4 md:right-4"
-        ),
-      });
+      showSuccessToast("User created");
     } catch (error) {
       const axiosError = error as AxiosError<ResponseData>;
       if (axiosError.response) {
@@ -152,9 +146,7 @@ const SignUpForm = () => {
           <div className="text-red-500 text-sm mt-2">{errors.root.message}</div>
         )}
       </form>
-      <div className="mx-auto my-4 flex w-full items-center justify-evenly before:mr-4 before:block before:h-px before:flex-grow before:bg-stone-400 after:ml-4 after:block after:h-px after:flex-grow after:bg-stone-400">
-        or
-      </div>
+
       <p className="text-center text-sm text-gray-600 mt-2">
         If you already have an account, please&nbsp;
         <Link className="text-blue-500 hover:underline" href="/signin">

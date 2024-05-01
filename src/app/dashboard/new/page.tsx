@@ -1,12 +1,11 @@
-"use client";
 import Tasks from "@/app/components/tasks/Tasks";
-import { useGlobalContext } from "../../context/GlobalContextProvider";
-import { Status } from "@prisma/client";
+import { TaskTitles } from "@/types/TaskTitles";
+import { SearchParamsProps } from "../page";
 
-const NewTasks = () => {
-  const { tasks } = useGlobalContext();
-  const newTasks = tasks.filter((task) => task.status === Status.NEW);
-  return <Tasks title="New tasks" tasks={newTasks} />;
+const NewTasks = async ({ searchParams }: SearchParamsProps) => {
+  const query = searchParams.query || "";
+
+  return <Tasks title={TaskTitles.New} query={query} />;
 };
 
 export default NewTasks;

@@ -5,22 +5,57 @@ import {
   PropsWithChildren,
   useContext,
   useEffect,
-  useState,
+  useCallback,
+  useReducer,
 } from "react";
 import axios from "axios";
-import { toast } from "@/components/ui/use-toast";
-import { cn } from "@/lib/utils";
 
-import { showErrorToast } from "../utils/showErrorToast";
 import { TaskSchema } from "../utils/validationSchemas";
 import { z } from "zod";
 import { Task } from "../components/tasks/TaskItem";
+import { useToastFunctions } from "../utils/showToast";
 
 type GlobalContextProps = {
   tasks: Task[];
   createTask: (task: z.infer<typeof TaskSchema>) => Promise<any>;
-  updateTask: any;
+  updateTask: (
+    id: number,
+    task: Task | z.infer<typeof TaskSchema>
+  ) => Promise<Task>;
   deleteTask: (id: number) => void;
+};
+
+type State = {
+  tasks: Task[];
+};
+
+type Action =
+  | { type: "SET_TASKS"; payload: Task[] }
+  | { type: "ADD_TASK"; payload: Task }
+  | { type: "UPDATE_TASK"; payload: Task }
+  | { type: "DELETE_TASK"; payload: number };
+
+const reducer = (state: State, action: Action): State => {
+  switch (action.type) {
+    case "SET_TASKS":
+      return { ...state, tasks: action.payload };
+    case "ADD_TASK":
+      return { ...state, tasks: [action.payload, ...state.tasks] };
+    case "UPDATE_TASK":
+      return {
+        ...state,
+        tasks: state.tasks.map((task) =>
+          task.id === action.payload.id ? action.payload : task
+        ),
+      };
+    case "DELETE_TASK":
+      return {
+        ...state,
+        tasks: state.tasks.filter((task) => task.id !== action.payload),
+      };
+    default:
+      return state;
+  }
 };
 
 export const GlobalContext = createContext<GlobalContextProps>(
@@ -29,12 +64,14 @@ export const GlobalContext = createContext<GlobalContextProps>(
 export const GlobalUpdateContext = createContext({});
 
 const GlobalContextProvider = ({ children }: PropsWithChildren) => {
-  const [tasks, setTasks] = useState<Task[]>([]);
+  const [state, dispatch] = useReducer(reducer, { tasks: [] });
+  const { showSuccessToast, showErrorToast } = useToastFunctions();
 
   const allTasks = async () => {
     try {
+      console.log("fetching tasks");
       const res = await axios.get("/api/tasks");
-      setTasks(res.data);
+      dispatch({ type: "SET_TASKS", payload: res.data });
     } catch (error) {
       console.error("Failed to fetch tasks", error);
       showErrorToast();
@@ -44,14 +81,8 @@ const GlobalContextProvider = ({ children }: PropsWithChildren) => {
   const createTask = async (task: z.infer<typeof TaskSchema>) => {
     try {
       const res = await axios.post("/api/tasks", task);
-      setTasks((prevTasks) => [res.data, ...prevTasks]);
-      toast({
-        title: "Success",
-        description: "Task created successfully",
-        className: cn(
-          "top-0 right-0 flex fixed md:max-w-[420px] md:top-4 md:right-4"
-        ),
-      });
+      dispatch({ type: "ADD_TASK", payload: res.data });
+      showSuccessToast("Task created");
       return res;
     } catch (error) {
       console.error("Failed to create task", error);
@@ -59,20 +90,15 @@ const GlobalContextProvider = ({ children }: PropsWithChildren) => {
     }
   };
 
-  const updateTask = async (id: number, task: Task) => {
+  const updateTask = async (
+    id: number,
+    task: Task | z.infer<typeof TaskSchema>
+  ) => {
     try {
       const req = await axios.put(`/api/tasks/${id}`, { task });
       console.log("req.data", req.data);
-      setTasks((prevTasks) =>
-        prevTasks.map((t) => (t.id === id ? { ...t, ...task } : t))
-      );
-      toast({
-        title: "Success",
-        description: "Task updated successfully",
-        className: cn(
-          "top-0 right-0 flex fixed md:max-w-[420px] md:top-4 md:right-4"
-        ),
-      });
+      dispatch({ type: "UPDATE_TASK", payload: req.data });
+      showSuccessToast("Task updated");
       return req.data;
     } catch (error) {
       console.error("Failed to update task", error);
@@ -83,14 +109,8 @@ const GlobalContextProvider = ({ children }: PropsWithChildren) => {
   const deleteTask = async (id: number) => {
     try {
       await axios.delete(`/api/tasks/${id}`);
-      setTasks((prevTasks) => prevTasks.filter((task) => task.id !== id));
-      toast({
-        title: "Success",
-        description: "Task deleted successfully",
-        className: cn(
-          "top-0 right-0 flex fixed md:max-w-[420px] md:top-4 md:right-4"
-        ),
-      });
+      dispatch({ type: "DELETE_TASK", payload: id });
+      showSuccessToast("Task deleted");
     } catch (error) {
       console.error("Failed to delete task", error);
       showErrorToast();
@@ -103,7 +123,7 @@ const GlobalContextProvider = ({ children }: PropsWithChildren) => {
   return (
     <GlobalContext.Provider
       value={{
-        tasks,
+        tasks: state.tasks,
         createTask,
         updateTask,
         deleteTask,
